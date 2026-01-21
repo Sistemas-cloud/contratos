@@ -183,7 +183,7 @@ export async function GET(request: NextRequest) {
 
       if (error) throw error;
       if (data) {
-        contratos.push(...data.map((c) => ({ ...c, tipo: "determinado" })));
+        contratos.push(...data.map((c: any) => ({ ...c, tipo: "determinado" })));
       }
     }
 
@@ -201,7 +201,7 @@ export async function GET(request: NextRequest) {
 
       if (error) throw error;
       if (data) {
-        contratos.push(...data.map((c) => ({ ...c, tipo: "indeterminado" })));
+        contratos.push(...data.map((c: any) => ({ ...c, tipo: "indeterminado" })));
       }
     }
 
@@ -219,7 +219,7 @@ export async function GET(request: NextRequest) {
 
       if (error) throw error;
       if (data) {
-        contratos.push(...data.map((c) => ({ ...c, tipo: "hora" })));
+        contratos.push(...data.map((c: any) => ({ ...c, tipo: "hora" })));
       }
     }
 
