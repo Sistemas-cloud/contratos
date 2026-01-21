@@ -57,30 +57,39 @@ export async function POST(request: NextRequest) {
       created_by: parseInt(userId),
     };
 
-    let result;
+    let result: any;
     if (tipo === "determinado") {
-      result = await supabase.from("contrato_determinado").insert({
+      const insertData = {
         ...commonData,
         fecha_contrato: data.fecha_contrato,
         fecha_termino: data.fecha_termino,
         sueldo_mensual: parseFloat(data.sueldo_mensual),
-      });
+      };
+      result = await (supabase
+        .from("contrato_determinado")
+        .insert(insertData as never) as any);
     } else if (tipo === "indeterminado") {
-      result = await supabase.from("contrato_indeterminado").insert({
+      const insertData = {
         ...commonData,
         fecha_leido: data.fecha_leido,
         fecha_inicio: data.fecha_inicio,
         fecha_contrato: data.fecha_contrato,
         salario: parseFloat(data.salario),
-      });
+      };
+      result = await (supabase
+        .from("contrato_indeterminado")
+        .insert(insertData as never) as any);
     } else if (tipo === "hora") {
-      result = await supabase.from("contrato_hora").insert({
+      const insertData = {
         ...commonData,
         fecha_inicio_esc: data.fecha_inicio_esc,
         fecha_termino_esc: data.fecha_termino_esc,
         fecha_contrato: data.fecha_contrato,
         costo_hora: parseFloat(data.costo_hora),
-      });
+      };
+      result = await (supabase
+        .from("contrato_hora")
+        .insert(insertData as never) as any);
     } else {
       return NextResponse.json(
         { error: "Tipo de contrato inválido" },
