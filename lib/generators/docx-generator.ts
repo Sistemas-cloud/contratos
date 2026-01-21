@@ -50,7 +50,7 @@ const renderTemplateToDocx = async (template: ContractTemplate, filename: string
     const isListItem = paragraph.text.trim().startsWith("-");
     
     // Los elementos de lista y los centrados no se justifican
-    let alignment = AlignmentType.JUSTIFIED;
+    let alignment: typeof AlignmentType[keyof typeof AlignmentType] = AlignmentType.JUSTIFIED;
     if (paragraph.align === "center") {
       alignment = AlignmentType.CENTER;
     } else if (isListItem) {
