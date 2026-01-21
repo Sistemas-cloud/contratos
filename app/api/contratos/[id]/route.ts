@@ -58,42 +58,39 @@ export async function PUT(
     let result: any;
 
     if (tipo === "determinado") {
-      const updateData: any = {
+      const updateData = {
         ...commonData,
         fecha_contrato: data.fecha_contrato,
         fecha_termino: data.fecha_termino,
         sueldo_mensual: parseFloat(data.sueldo_mensual),
       };
-      // @ts-ignore - Supabase type inference issue with dynamic tables
-      result = await supabase
+      result = await (supabase
         .from("contrato_determinado")
-        .update(updateData)
+        .update(updateData as never) as any)
         .eq("id", contratoId);
     } else if (tipo === "indeterminado") {
-      const updateData: any = {
+      const updateData = {
         ...commonData,
         fecha_leido: data.fecha_leido,
         fecha_inicio: data.fecha_inicio,
         fecha_contrato: data.fecha_contrato,
         salario: parseFloat(data.salario),
       };
-      // @ts-ignore - Supabase type inference issue with dynamic tables
-      result = await supabase
+      result = await (supabase
         .from("contrato_indeterminado")
-        .update(updateData)
+        .update(updateData as never) as any)
         .eq("id", contratoId);
     } else if (tipo === "hora") {
-      const updateData: any = {
+      const updateData = {
         ...commonData,
         fecha_inicio_esc: data.fecha_inicio_esc,
         fecha_termino_esc: data.fecha_termino_esc,
         fecha_contrato: data.fecha_contrato,
         costo_hora: parseFloat(data.costo_hora),
       };
-      // @ts-ignore - Supabase type inference issue with dynamic tables
-      result = await supabase
+      result = await (supabase
         .from("contrato_hora")
-        .update(updateData)
+        .update(updateData as never) as any)
         .eq("id", contratoId);
     } else {
       return NextResponse.json(
