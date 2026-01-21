@@ -58,36 +58,42 @@ export async function PUT(
     let result: any;
 
     if (tipo === "determinado") {
+      const updateData: any = {
+        ...commonData,
+        fecha_contrato: data.fecha_contrato,
+        fecha_termino: data.fecha_termino,
+        sueldo_mensual: parseFloat(data.sueldo_mensual),
+      };
+      // @ts-expect-error - Supabase type inference issue with dynamic tables
       result = await supabase
         .from("contrato_determinado")
-        .update({
-          ...commonData,
-          fecha_contrato: data.fecha_contrato,
-          fecha_termino: data.fecha_termino,
-          sueldo_mensual: parseFloat(data.sueldo_mensual),
-        } as any)
+        .update(updateData)
         .eq("id", contratoId);
     } else if (tipo === "indeterminado") {
+      const updateData: any = {
+        ...commonData,
+        fecha_leido: data.fecha_leido,
+        fecha_inicio: data.fecha_inicio,
+        fecha_contrato: data.fecha_contrato,
+        salario: parseFloat(data.salario),
+      };
+      // @ts-expect-error - Supabase type inference issue with dynamic tables
       result = await supabase
         .from("contrato_indeterminado")
-        .update({
-          ...commonData,
-          fecha_leido: data.fecha_leido,
-          fecha_inicio: data.fecha_inicio,
-          fecha_contrato: data.fecha_contrato,
-          salario: parseFloat(data.salario),
-        } as any)
+        .update(updateData)
         .eq("id", contratoId);
     } else if (tipo === "hora") {
+      const updateData: any = {
+        ...commonData,
+        fecha_inicio_esc: data.fecha_inicio_esc,
+        fecha_termino_esc: data.fecha_termino_esc,
+        fecha_contrato: data.fecha_contrato,
+        costo_hora: parseFloat(data.costo_hora),
+      };
+      // @ts-expect-error - Supabase type inference issue with dynamic tables
       result = await supabase
         .from("contrato_hora")
-        .update({
-          ...commonData,
-          fecha_inicio_esc: data.fecha_inicio_esc,
-          fecha_termino_esc: data.fecha_termino_esc,
-          fecha_contrato: data.fecha_contrato,
-          costo_hora: parseFloat(data.costo_hora),
-        } as any)
+        .update(updateData)
         .eq("id", contratoId);
     } else {
       return NextResponse.json(
