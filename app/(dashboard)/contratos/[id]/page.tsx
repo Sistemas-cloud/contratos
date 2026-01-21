@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,11 +18,7 @@ export default function ContratoDetailPage() {
   const [generating, setGenerating] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
 
-  useEffect(() => {
-    fetchContrato();
-  }, []);
-
-  const fetchContrato = async () => {
+  const fetchContrato = useCallback(async () => {
     try {
       setLoading(true);
       const contratoId = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -59,7 +55,11 @@ export default function ContratoDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id, router]);
+
+  useEffect(() => {
+    fetchContrato();
+  }, [fetchContrato]);
 
   const handleGeneratePDF = async () => {
     let toastId: string | number | undefined;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,7 @@ export default function ContratosList() {
   const [loading, setLoading] = useState(true);
   const [tipoFiltro, setTipoFiltro] = useState<string>("todos");
 
-  useEffect(() => {
-    fetchContratos();
-  }, [tipoFiltro]);
-
-  const fetchContratos = async () => {
+  const fetchContratos = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/contratos?tipo=${tipoFiltro}`);
@@ -43,7 +39,11 @@ export default function ContratosList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [tipoFiltro, router]);
+
+  useEffect(() => {
+    fetchContratos();
+  }, [fetchContratos]);
 
   const handleDelete = async (id: string, tipo: string) => {
     if (!confirm("¿Estás seguro de eliminar este contrato?")) return;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,11 +49,7 @@ export default function EditarContratoPage() {
     costo_hora: "",
   });
 
-  useEffect(() => {
-    fetchContrato();
-  }, []);
-
-  const fetchContrato = async () => {
+  const fetchContrato = useCallback(async () => {
     try {
       setLoading(true);
       const contratoId = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -96,7 +92,11 @@ export default function EditarContratoPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id, router]);
+
+  useEffect(() => {
+    fetchContrato();
+  }, [fetchContrato]);
 
   const handleDiaChange = (dia: string) => {
     setFormData((prev: any) => ({
