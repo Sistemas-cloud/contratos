@@ -13,8 +13,11 @@ import {
   type ContractTemplate,
 } from "./contrato-templates";
 
-const crearParrafo = (texto: string, bold = false, align: AlignmentType = AlignmentType.JUSTIFIED) =>
-  new Paragraph({
+const crearParrafo = (texto: string, bold = false, align: typeof AlignmentType[keyof typeof AlignmentType] = AlignmentType.JUSTIFIED) => {
+  const isListItem = texto.trim().startsWith("- "); // Detectar si es un elemento de lista
+  const finalAlign = isListItem ? AlignmentType.LEFT : align; // Forzar LEFT para elementos de lista
+
+  return new Paragraph({
     children: [
       new TextRun({
         text: texto,
@@ -23,9 +26,10 @@ const crearParrafo = (texto: string, bold = false, align: AlignmentType = Alignm
         size: 18,
       }),
     ],
-    alignment: align,
+    alignment: finalAlign,
     spacing: { after: 120 },
   });
+};
 
 const renderTemplateToDocx = async (template: ContractTemplate, filename: string) => {
   const paragraphs: Paragraph[] = [];
