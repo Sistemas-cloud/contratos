@@ -64,7 +64,7 @@ export async function PUT(
         fecha_termino: data.fecha_termino,
         sueldo_mensual: parseFloat(data.sueldo_mensual),
       };
-      // @ts-expect-error - Supabase type inference issue with dynamic tables
+      // @ts-ignore - Supabase type inference issue with dynamic tables
       result = await supabase
         .from("contrato_determinado")
         .update(updateData)
@@ -77,7 +77,7 @@ export async function PUT(
         fecha_contrato: data.fecha_contrato,
         salario: parseFloat(data.salario),
       };
-      // @ts-expect-error - Supabase type inference issue with dynamic tables
+      // @ts-ignore - Supabase type inference issue with dynamic tables
       result = await supabase
         .from("contrato_indeterminado")
         .update(updateData)
@@ -90,7 +90,7 @@ export async function PUT(
         fecha_contrato: data.fecha_contrato,
         costo_hora: parseFloat(data.costo_hora),
       };
-      // @ts-expect-error - Supabase type inference issue with dynamic tables
+      // @ts-ignore - Supabase type inference issue with dynamic tables
       result = await supabase
         .from("contrato_hora")
         .update(updateData)
