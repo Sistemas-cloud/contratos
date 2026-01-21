@@ -32,7 +32,7 @@ export async function PUT(
     const contratoId = Array.isArray(params.id) ? params.id[0] : params.id;
 
     // Preparar datos comunes
-    const commonData: any = {
+    const commonData = {
       nombre: data.nombre,
       puesto: data.puesto,
       nacionalidad: data.nacionalidad,
@@ -55,43 +55,39 @@ export async function PUT(
       testigo2: data.testigo2,
     };
 
-    let result;
-    let tableName: string;
+    let result: any;
 
     if (tipo === "determinado") {
-      tableName = "contrato_determinado";
       result = await supabase
-        .from(tableName)
+        .from("contrato_determinado")
         .update({
           ...commonData,
           fecha_contrato: data.fecha_contrato,
           fecha_termino: data.fecha_termino,
           sueldo_mensual: parseFloat(data.sueldo_mensual),
-        })
+        } as any)
         .eq("id", contratoId);
     } else if (tipo === "indeterminado") {
-      tableName = "contrato_indeterminado";
       result = await supabase
-        .from(tableName)
+        .from("contrato_indeterminado")
         .update({
           ...commonData,
           fecha_leido: data.fecha_leido,
           fecha_inicio: data.fecha_inicio,
           fecha_contrato: data.fecha_contrato,
           salario: parseFloat(data.salario),
-        })
+        } as any)
         .eq("id", contratoId);
     } else if (tipo === "hora") {
-      tableName = "contrato_hora";
       result = await supabase
-        .from(tableName)
+        .from("contrato_hora")
         .update({
           ...commonData,
           fecha_inicio_esc: data.fecha_inicio_esc,
           fecha_termino_esc: data.fecha_termino_esc,
           fecha_contrato: data.fecha_contrato,
           costo_hora: parseFloat(data.costo_hora),
-        })
+        } as any)
         .eq("id", contratoId);
     } else {
       return NextResponse.json(
