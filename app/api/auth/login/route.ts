@@ -33,13 +33,45 @@ export async function POST(request: Request) {
     const supabase = createServiceClient();
     console.log("[LOGIN API] Cliente Supabase creado (Service Role)");
 
-    // Buscar usuario en la tabla usuario (no Supabase Auth)
+    // Buscar usuario en la tabla usuario/usuarios (no Supabase Auth)
     console.log("[LOGIN API] Buscando usuario:", validated.username);
-    const { data: usuario, error } = await supabase
+    
+    // Intentar primero con "usuario", si falla intentar con "usuarios"
+    let { data: usuario, error } = await supabase
       .from("usuario")
       .select("usuario_id, usuario_username, usuario_password, usuario_nombre, nivel")
       .eq("usuario_username", validated.username)
       .single();
+    
+    // Si no se encuentra en "usuario", intentar con "usuarios"
+    if (error && error.code === 'PGRST116') {
+      console.log("[LOGIN API] No encontrado en 'usuario', intentando con 'usuarios'");
+      const result: any = await supabase
+        .from("usuarios")
+        .select("id, usuario_username, usuario_password, usuario_nombre, nivel")
+        .eq("usuario_username", validated.username)
+        .single();
+      
+      if (result.data) {
+        // Mapear estructura de "usuarios" a formato esperado
+        // El ID puede ser UUID (string) o INTEGER (number)
+        const userId = typeof result.data.id === 'string' 
+          ? result.data.id 
+          : String(result.data.id);
+        
+        usuario = {
+          usuario_id: userId as any, // Convertir a formato esperado
+          usuario_username: result.data.usuario_username,
+          usuario_password: result.data.usuario_password,
+          usuario_nombre: result.data.usuario_nombre,
+          nivel: result.data.nivel
+        } as any;
+        error = null;
+        console.log("[LOGIN API] Usuario encontrado en tabla 'usuarios'");
+      } else {
+        error = result.error;
+      }
+    }
 
     console.log("[LOGIN API] Resultado de búsqueda:", { 
       usuario: usuario ? "encontrado" : "no encontrado", 
@@ -95,20 +127,33 @@ export async function POST(request: Request) {
       },
     });
 
-    // Guardar en cookie (en producción usar httpOnly, secure, sameSite)
-    response.cookies.set("user_id", (usuario as any).usuario_id.toString(), {
+    // Guardar en cookie con configuración segura para producción
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieOptions = {
       maxAge: 60 * 60 * 24 * 7, // 7 días
-    });
-    response.cookies.set("user_nivel", (usuario as any).nivel?.toString() || "0", {
-      maxAge: 60 * 60 * 24 * 7,
-    });
+      httpOnly: true, // Prevenir acceso desde JavaScript
+      secure: isProduction, // Solo enviar sobre HTTPS en producción
+      sameSite: 'lax' as const, // Protección CSRF
+      path: '/',
+    };
+    
+    response.cookies.set("user_id", (usuario as any).usuario_id.toString(), cookieOptions);
+    response.cookies.set("user_nivel", (usuario as any).nivel?.toString() || "0", cookieOptions);
 
     console.log("[LOGIN API] Respuesta creada, retornando");
     return response;
   } catch (error: any) {
     console.error("[LOGIN API] Error capturado:", error);
+    console.error("[LOGIN API] Stack:", error.stack);
+    console.error("[LOGIN API] Error completo:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    
+    // Mensaje de error más descriptivo para producción
+    const errorMessage = process.env.NODE_ENV === 'production'
+      ? "Error al iniciar sesión. Por favor, intenta nuevamente."
+      : error.message || "Error al iniciar sesión";
+    
     return NextResponse.json(
-      { error: error.message || "Error al iniciar sesión", errorType: "general" },
+      { error: errorMessage, errorType: "general" },
       { status: 500 }
     );
   }
