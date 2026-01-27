@@ -21,6 +21,13 @@ export default function ContratosList() {
       const response = await fetch(`/api/contratos?tipo=${tipoFiltro}`);
       const data = await response.json();
 
+      console.log("[ContratosList] Respuesta API:", { 
+        ok: response.ok, 
+        status: response.status,
+        dataLength: data.data?.length || 0,
+        data: data.data 
+      });
+
       if (!response.ok) {
         // Si es error 401, redirigir al login
         if (response.status === 401) {
@@ -33,7 +40,16 @@ export default function ContratosList() {
         throw new Error(data.error || "Error al cargar contratos");
       }
 
-      setContratos(data.data || []);
+      const contratosData = data.data || [];
+      console.log("[ContratosList] Contratos recibidos:", contratosData.length);
+      
+      // Asegurar que los IDs sean strings
+      const contratosFormateados = contratosData.map((c: any) => ({
+        ...c,
+        id: String(c.id || c.contrato_id || c.determinado_id || c.indeterminado_id || c.hora_id)
+      }));
+      
+      setContratos(contratosFormateados);
     } catch (error: any) {
       toast.error(error.message || "Error al cargar contratos");
     } finally {

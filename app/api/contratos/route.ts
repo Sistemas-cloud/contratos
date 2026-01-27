@@ -169,6 +169,8 @@ export async function GET(request: NextRequest) {
       nivelFilter = nivelUsuario;
     }
 
+    console.log("[GET CONTRATOS] Usuario ID:", userId, "Nivel:", nivelUsuario, "Filtro nivel:", nivelFilter, "Tipo:", tipo);
+
     if (tipo === "todos" || tipo === "determinado") {
       let query = supabase
         .from("contrato_determinado")
@@ -177,13 +179,20 @@ export async function GET(request: NextRequest) {
       // Aplicar filtro de nivel si no es admin
       if (nivelFilter !== null) {
         query = query.eq("nivel", nivelFilter);
+        console.log("[GET CONTRATOS] Aplicando filtro de nivel", nivelFilter, "a determinados");
+      } else {
+        console.log("[GET CONTRATOS] Admin - sin filtro de nivel para determinados");
       }
       
       const { data, error } = await query.order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("[GET CONTRATOS] Error en determinados:", error);
+        throw error;
+      }
       if (data) {
-        contratos.push(...data.map((c: any) => ({ ...c, tipo: "determinado" })));
+        console.log("[GET CONTRATOS] Determinados encontrados:", data.length, "Niveles:", data.map((c: any) => c.nivel));
+        contratos.push(...data.map((c: any) => ({ ...c, tipo: "determinado", id: String(c.id) })));
       }
     }
 
@@ -195,13 +204,20 @@ export async function GET(request: NextRequest) {
       // Aplicar filtro de nivel si no es admin
       if (nivelFilter !== null) {
         query = query.eq("nivel", nivelFilter);
+        console.log("[GET CONTRATOS] Aplicando filtro de nivel", nivelFilter, "a indeterminados");
+      } else {
+        console.log("[GET CONTRATOS] Admin - sin filtro de nivel para indeterminados");
       }
       
       const { data, error } = await query.order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("[GET CONTRATOS] Error en indeterminados:", error);
+        throw error;
+      }
       if (data) {
-        contratos.push(...data.map((c: any) => ({ ...c, tipo: "indeterminado" })));
+        console.log("[GET CONTRATOS] Indeterminados encontrados:", data.length, "Niveles:", data.map((c: any) => c.nivel));
+        contratos.push(...data.map((c: any) => ({ ...c, tipo: "indeterminado", id: String(c.id) })));
       }
     }
 
@@ -213,16 +229,24 @@ export async function GET(request: NextRequest) {
       // Aplicar filtro de nivel si no es admin
       if (nivelFilter !== null) {
         query = query.eq("nivel", nivelFilter);
+        console.log("[GET CONTRATOS] Aplicando filtro de nivel", nivelFilter, "a por hora");
+      } else {
+        console.log("[GET CONTRATOS] Admin - sin filtro de nivel para por hora");
       }
       
       const { data, error } = await query.order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("[GET CONTRATOS] Error en por hora:", error);
+        throw error;
+      }
       if (data) {
-        contratos.push(...data.map((c: any) => ({ ...c, tipo: "hora" })));
+        console.log("[GET CONTRATOS] Por hora encontrados:", data.length, "Niveles:", data.map((c: any) => c.nivel));
+        contratos.push(...data.map((c: any) => ({ ...c, tipo: "hora", id: String(c.id) })));
       }
     }
 
+    console.log("[GET CONTRATOS] Total contratos retornados:", contratos.length);
     return NextResponse.json({ data: contratos });
   } catch (error: any) {
     console.error("Error fetching contratos:", error);
