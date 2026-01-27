@@ -21,10 +21,30 @@ export async function POST(request: Request) {
     console.log("[LOGIN API] Datos validados");
 
     // Verificar que las variables de entorno estén configuradas
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.error("Missing Supabase environment variables");
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    console.log("[LOGIN API] Verificando variables de entorno:", {
+      hasUrl: !!supabaseUrl,
+      hasServiceKey: !!serviceRoleKey,
+      urlLength: supabaseUrl?.length || 0,
+      keyLength: serviceRoleKey?.length || 0,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
+    if (!supabaseUrl || !serviceRoleKey) {
+      console.error("[LOGIN API] Missing Supabase environment variables:", {
+        missingUrl: !supabaseUrl,
+        missingServiceKey: !serviceRoleKey
+      });
       return NextResponse.json(
-        { error: "Error de configuración del servidor", errorType: "general" },
+        { 
+          error: "Error de configuración del servidor. Variables de entorno faltantes.",
+          errorType: "general",
+          details: process.env.NODE_ENV === 'production' 
+            ? "Contacta al administrador del sistema"
+            : `Faltan: ${!supabaseUrl ? 'NEXT_PUBLIC_SUPABASE_URL ' : ''}${!serviceRoleKey ? 'SUPABASE_SERVICE_ROLE_KEY' : ''}`
+        },
         { status: 500 }
       );
     }
