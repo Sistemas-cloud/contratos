@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Estilos para select y option */
+  select {
+    @apply bg-background text-foreground border-input;
+  }
+  
+  select option {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Asegurar que los selects tengan fondo blanco y texto oscuro */
+  select:not([disabled]) {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+  
+  select option {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+  
+  /* Estilos para textarea */
+  textarea {
+    @apply bg-background text-foreground border-input;
+  }
+  
+  /* Estilos para campos de fecha */
+  input[type="date"] {
+    @apply cursor-pointer;
+    position: relative;
+  }
+  
+  /* Mejorar la apariencia del calendario nativo */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 1;
+    filter: invert(0.5);
+    padding: 4px;
+    margin-left: 4px;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0.8;
+  }
+  
+  /* Para Firefox */
+  input[type="date"]::-moz-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 4px;
+  }
+  
+  /* Asegurar que el campo de fecha tenga suficiente espacio para el icono */
+  input[type="date"] {
+    padding-right: 2.5rem;
+  }
+  
+  /* Estilos para campos de hora */
+  input[type="time"] {
+    @apply cursor-pointer;
+    position: relative;
+  }
+  
+  /* Mejorar la apariencia del selector de hora nativo */
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 1;
+    filter: invert(0.5);
+    padding: 4px;
+    margin-left: 4px;
+  }
+  
+  input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0.8;
+  }
+  
+  /* Para Firefox */
+  input[type="time"]::-moz-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 4px;
+  }
+  
+  /* Asegurar que el campo de hora tenga suficiente espacio para el icono nativo */
+  input[type="time"] {
+    padding-right: 2.5rem;
+  }
+}
+
+@layer utilities {
+  /* Animaciones personalizadas */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-from-top {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-from-bottom {
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-from-left {
+    from {
+      transform: translateX(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-in {
+    animation-fill-mode: both;
+  }
+
+  .fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+
+  .slide-in-from-top-4 {
+    animation: slide-in-from-top 0.5s ease-out;
+  }
+
+  .slide-in-from-bottom-4 {
+    animation: slide-in-from-bottom 0.5s ease-out;
+  }
+
+  .slide-in-from-left-4 {
+    animation: slide-in-from-left 0.5s ease-out;
+  }
+}

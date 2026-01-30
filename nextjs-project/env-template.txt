@@ -1,0 +1,35 @@
+# ============================================
+# ARCHIVO .env.local
+# Copia este contenido a un archivo llamado .env.local
+# ============================================
+
+# Supabase API (HTTP) - REQUERIDO
+# Obtén estos valores en: Settings > API de tu proyecto Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://nmxrccrbnoenkahefrrw.supabase.co
+
+# IMPORTANTE: Necesitas las keys JWT, NO las "publishable" o "secret" keys
+# Ve a: Settings > API > Project API keys
+# Busca las secciones:
+# - "anon" "public" key (JWT) → NEXT_PUBLIC_SUPABASE_ANON_KEY
+# - "service_role" "secret" key (JWT) → SUPABASE_SERVICE_ROLE_KEY
+# Estas keys tienen formato: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# Supabase PostgreSQL (Direct Connection - OPCIONAL)
+# Solo si necesitas conexión directa a PostgreSQL
+# Reemplaza [YOUR-PASSWORD] con tu contraseña de PostgreSQL
+DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.nmxrccrbnoenkahefrrw.supabase.co:5432/postgres
+
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_NAME="Sistema de Contratos"
+NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=contratos
+
+# ============================================
+# INSTRUCCIONES:
+# 1. Copia este archivo y renómbralo a .env.local
+# 2. Reemplaza [YOUR-PASSWORD] con tu contraseña real
+# 3. Obtén las keys de Supabase en Settings > API
+# 4. Guarda el archivo
+# ============================================
