@@ -83,7 +83,20 @@ export function numeroATextoPesos(numero: number): string {
 }
 
 /**
- * Convierte una fecha a formato de texto legal (español)
+ * Parsea una fecha string (YYYY-MM-DD o ISO) como fecha local para evitar desfase por UTC.
+ * Devuelve Date a medianoche local; si el string no es válido, devuelve Invalid Date.
+ */
+function parseFechaLocal(fecha: string): Date {
+  const part = String(fecha).split("T")[0];
+  const parts = part.split("-").map(Number);
+  if (parts.length !== 3 || parts.some((n) => isNaN(n))) return new Date(NaN);
+  const [y, m, d] = parts;
+  return new Date(y, m - 1, d);
+}
+
+/**
+ * Convierte una fecha a formato de texto legal (español).
+ * Usa la fecha como local para evitar que medianoche UTC se muestre como el día anterior.
  * Ejemplo: "2024-12-25" -> "25 DE DICIEMBRE DEL 2024"
  */
 export function fechaATexto(fecha: string | Date): string {
@@ -91,18 +104,17 @@ export function fechaATexto(fecha: string | Date): string {
     'ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
     'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'
   ];
-  
-  const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
-  
+  const date = typeof fecha === 'string' ? parseFechaLocal(fecha) : fecha;
+  if (isNaN(date.getTime())) return typeof fecha === 'string' ? fecha : '';
   const dia = date.getDate();
   const mes = meses[date.getMonth()];
   const anio = date.getFullYear();
-  
   return `${dia} DE ${mes} DEL ${anio}`;
 }
 
 /**
- * Convierte una fecha a formato de texto en minúsculas
+ * Convierte una fecha a formato de texto en minúsculas.
+ * Usa la fecha como local para evitar desfase por zona horaria.
  * Ejemplo: "2024-12-25" -> "25 de diciembre del 2024"
  */
 export function fechaATextoMinusculas(fecha: string | Date): string {
@@ -110,14 +122,26 @@ export function fechaATextoMinusculas(fecha: string | Date): string {
     'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
     'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
   ];
-  
-  const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
-  
+  const date = typeof fecha === 'string' ? parseFechaLocal(fecha) : fecha;
+  if (isNaN(date.getTime())) return typeof fecha === 'string' ? fecha : '';
   const dia = date.getDate();
   const mes = meses[date.getMonth()];
   const anio = date.getFullYear();
-  
   return `${dia} de ${mes} del ${anio}`;
+}
+
+/**
+ * Formatea una fecha guardada como YYYY-MM-DD (sin hora) para mostrar en es-MX.
+ * Usa la fecha como local para evitar que medianoche UTC se muestre como el día anterior.
+ * Ejemplo: "2026-01-15" -> "15/1/2026" (no 14/1/2026 por zona horaria)
+ */
+export function formatearFechaLocal(dateStr: string | null | undefined): string {
+  if (!dateStr) return "—";
+  const part = String(dateStr).split("T")[0];
+  const parts = part.split("-").map(Number);
+  if (parts.length !== 3 || parts.some((n) => isNaN(n))) return String(dateStr);
+  const [y, m, d] = parts;
+  return new Date(y, m - 1, d).toLocaleDateString("es-MX");
 }
 
 /**

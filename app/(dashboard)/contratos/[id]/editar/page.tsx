@@ -72,6 +72,9 @@ export default function EditarContratoPage() {
           const found = data.data.find((c: any) => c.id === contratoId);
           if (found) {
             setTipoContrato(tipo);
+            // Normalizar fechas a YYYY-MM-DD para que los inputs type="date" las muestren
+            const toDateOnly = (v: string | null | undefined) =>
+              v ? new Date(v).toISOString().slice(0, 10) : "";
             setFormData({
               ...found,
               dias: found.dias ? found.dias.split(",").map((d: string) => d.trim()) : [],
@@ -81,6 +84,12 @@ export default function EditarContratoPage() {
               sueldo_mensual: found.sueldo_mensual?.toString() || "",
               salario: found.salario?.toString() || "",
               costo_hora: found.costo_hora?.toString() || "",
+              fecha_contrato: toDateOnly(found.fecha_contrato),
+              fecha_termino: toDateOnly(found.fecha_termino),
+              fecha_leido: toDateOnly(found.fecha_leido),
+              fecha_inicio: toDateOnly(found.fecha_inicio),
+              fecha_inicio_esc: toDateOnly(found.fecha_inicio_esc),
+              fecha_termino_esc: toDateOnly(found.fecha_termino_esc),
             });
             break;
           }

@@ -9,6 +9,7 @@ import { Loader2, FileText, Edit, ArrowLeft, FileDown, ChevronDown } from "lucid
 import Link from "next/link";
 import { generarPDF } from "@/lib/generators/pdf-generator";
 import { generarDOCX } from "@/lib/generators/docx-generator";
+import { formatearFechaLocal } from "@/lib/utils/formatters";
 
 export default function ContratoDetailPage() {
   const params = useParams();
@@ -315,40 +316,98 @@ export default function ContratoDetailPage() {
                 ? "Indeterminado"
                 : "Por Hora"}
             </div>
-            {contrato.fecha_contrato && (
-              <div>
-                <span className="font-medium">Fecha de contrato:</span>{" "}
-                {new Date(contrato.fecha_contrato).toLocaleDateString("es-MX")}
-              </div>
+
+            {/* Indeterminado: solo fecha_leido, fecha_inicio, fecha_contrato (según BD) */}
+            {contrato.tipo === "indeterminado" && (
+              <>
+                <div>
+                  <span className="font-medium">Fecha de contrato leído:</span>{" "}
+                  {formatearFechaLocal(contrato.fecha_leido)}
+                </div>
+                <div>
+                  <span className="font-medium">Fecha de inicio:</span>{" "}
+                  {formatearFechaLocal(contrato.fecha_inicio)}
+                </div>
+                <div>
+                  <span className="font-medium">Fecha de contrato (firma):</span>{" "}
+                  {formatearFechaLocal(contrato.fecha_contrato)}
+                </div>
+                {contrato.salario != null && (
+                  <div>
+                    <span className="font-medium">Salario:</span> $
+                    {parseFloat(String(contrato.salario)).toLocaleString("es-MX", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </div>
+                )}
+              </>
             )}
-            {contrato.fecha_termino && (
-              <div>
-                <span className="font-medium">Fecha de término:</span>{" "}
-                {new Date(contrato.fecha_termino).toLocaleDateString("es-MX")}
-              </div>
+
+            {/* Determinado: solo fecha_contrato, fecha_termino (según BD) */}
+            {contrato.tipo === "determinado" && (
+              <>
+                <div>
+                  <span className="font-medium">Fecha de contrato:</span>{" "}
+                  {formatearFechaLocal(contrato.fecha_contrato)}
+                </div>
+                <div>
+                  <span className="font-medium">Fecha de término:</span>{" "}
+                  {formatearFechaLocal(contrato.fecha_termino)}
+                </div>
+                {contrato.sueldo_mensual != null && (
+                  <div>
+                    <span className="font-medium">Sueldo mensual:</span> $
+                    {parseFloat(String(contrato.sueldo_mensual)).toLocaleString("es-MX", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </div>
+                )}
+              </>
             )}
-            {contrato.sueldo_mensual && (
-              <div>
-                <span className="font-medium">Sueldo mensual:</span> $
-                {parseFloat(contrato.sueldo_mensual).toLocaleString("es-MX", {
-                  minimumFractionDigits: 2,
-                })}
-              </div>
+
+            {/* Por hora: solo fecha_inicio_esc, fecha_termino_esc, fecha_contrato (según BD) */}
+            {contrato.tipo === "hora" && (
+              <>
+                <div>
+                  <span className="font-medium">Fecha inicio (escolar):</span>{" "}
+                  {formatearFechaLocal(contrato.fecha_inicio_esc)}
+                </div>
+                <div>
+                  <span className="font-medium">Fecha término (escolar):</span>{" "}
+                  {formatearFechaLocal(contrato.fecha_termino_esc)}
+                </div>
+                <div>
+                  <span className="font-medium">Fecha de contrato:</span>{" "}
+                  {formatearFechaLocal(contrato.fecha_contrato)}
+                </div>
+                {contrato.costo_hora != null && (
+                  <div>
+                    <span className="font-medium">Costo por hora:</span> $
+                    {parseFloat(String(contrato.costo_hora)).toLocaleString("es-MX", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </div>
+                )}
+              </>
             )}
-            {contrato.salario && (
-              <div>
-                <span className="font-medium">Salario:</span> $
-                {parseFloat(contrato.salario).toLocaleString("es-MX", {
-                  minimumFractionDigits: 2,
-                })}
-              </div>
-            )}
-            {contrato.costo_hora && (
-              <div>
-                <span className="font-medium">Costo por hora:</span> $
-                {parseFloat(contrato.costo_hora).toLocaleString("es-MX", {
-                  minimumFractionDigits: 2,
-                })}
+            {/* Fechas de registro guardadas en base de datos */}
+            {(contrato.created_at || contrato.updated_at) && (
+              <div className="pt-3 mt-3 border-t border-gray-200 space-y-1">
+                <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                  Fechas de registro del contrato
+                </div>
+                {contrato.created_at && (
+                  <div className="text-sm">
+                    <span className="font-medium text-gray-600">Registrado:</span>{" "}
+                    {formatearFechaLocal(contrato.created_at)}
+                  </div>
+                )}
+                {contrato.updated_at && (
+                  <div className="text-sm">
+                    <span className="font-medium text-gray-600">Última actualización:</span>{" "}
+                    {formatearFechaLocal(contrato.updated_at)}
+                  </div>
+                )}
               </div>
             )}
           </CardContent>

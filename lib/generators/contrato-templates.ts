@@ -121,7 +121,7 @@ export function buildContratoDeterminadoTemplate(contrato: ContratoData): Contra
         'SEGUNDA. - "EL CONTRATO" se celebra por TIEMPO DETERMINADO sujeto a capacitación inicial según lo ' +
         'establece el artículo 35 de "LA LEY". La vigencia de la relación de trabajo tendrá una duración de 90 días, ' +
         "el cual computará a partir de la fecha de la firma del presente contrato hasta el " +
-        `${contrato.fecha_termino} , sujetándose a una evaluación al cumplir los primeros 30 días laborando, ` +
+        `${fechaATexto(contrato.fecha_termino || "")} , sujetándose a una evaluación al cumplir los primeros 30 días laborando, ` +
         'donde de no acreditar competencia el trabajador, a juicio de "EL PATRON", se dará por terminada la relación ' +
         'de trabajo, sin responsabilidad para el patrón. En el supuesto que la fuente de trabajo se agote o se ' +
         'extinga previo al término establecido se hace del conocimiento a "EL TRABAJADOR" que la relación ' +
@@ -591,7 +591,7 @@ export function buildContratoIndeterminadoTemplate(contrato: ContratoData): Cont
     {
       text:
         'DÉCIMA OCTAVA. - "LAS PARTES" reconocen como fecha de antigüedad o de iniciación de prestación de servicios de "EL TRABAJADOR" a partir del día ' +
-        `${contrato.fecha_inicio}.`,
+        `${fechaATexto(contrato.fecha_inicio || "")}.`,
     },
     {
       text:

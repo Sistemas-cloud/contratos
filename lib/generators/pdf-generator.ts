@@ -150,16 +150,19 @@ const renderTemplateToPdf = (template: ContractTemplate, filename: string) => {
     y += 2;
   });
 
-  if (y > pageHeight - 60) {
+  if (y > pageHeight - 80) {
     doc.addPage();
     y = 20;
   }
+
+  // Más espacio antes del bloque de firmas para que quepa la firma manuscrita
+  y += 22;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.text("_______________________________________", margin, y);
   doc.text("_______________________________________", pageWidth - margin - 60, y);
-  y += 6;
+  y += 12;
   doc.text(template.firmas.patronNombre, margin + 10, y);
   doc.text(template.firmas.trabajadorNombre, pageWidth - margin - 50, y);
   y += 6;
@@ -168,10 +171,11 @@ const renderTemplateToPdf = (template: ContractTemplate, filename: string) => {
   y += 6;
   doc.text(template.firmas.patronCargo, margin + 10, y);
 
-  y += 10;
+  // Más espacio entre bloque Patrón/Trabajador y bloque Testigos
+  y += 24;
   doc.text("_______________________________________", margin, y);
   doc.text("_______________________________________", pageWidth - margin - 60, y);
-  y += 6;
+  y += 12;
   doc.text(template.testigos.testigo1, margin + 10, y);
   doc.text(template.testigos.testigo2, pageWidth - margin - 50, y);
   y += 6;
