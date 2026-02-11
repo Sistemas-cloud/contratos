@@ -32,7 +32,7 @@ const formatMoney = (value: number): string => {
   const fixed = value.toFixed(2);
   const [intPart, decPart] = fixed.split(".");
   const withCommas = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return `${withCommas}.${decPart}`;
+  return `$${withCommas}.${decPart}`;
 };
 
 const splitFunciones = (funciones: string): string[] => {
@@ -53,7 +53,7 @@ export function buildContratoDeterminadoTemplate(contrato: ContratoData): Contra
     {
       text:
         `CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO, que celebran por una parte ` +
-        `${PATRON_ENTIDAD} representada en este acto por la C. ${PATRON_NOMBRE} ` +
+        `${PATRON_ENTIDAD} representada en este acto por la ${PATRON_NOMBRE} ` +
         `en su calidad de Representante Legal en lo sucesivo "EL PATRON" y por la otra el C. ` +
         `${contrato.nombre}, a quien en lo sucesivo se le denominará "EL TRABAJADOR", ` +
         `quienes están conformes en sujetarse al tenor de los siguientes DECLARACIONES Y CLAUSULAS:`,
@@ -400,7 +400,7 @@ export function buildContratoIndeterminadoTemplate(contrato: ContratoData): Cont
     {
       text:
         `CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO INDETERMINADO, que celebran por una parte ` +
-        `${PATRON_ENTIDAD} representada en este acto por la C. ${PATRON_NOMBRE} ` +
+        `${PATRON_ENTIDAD} representada en este acto por la ${PATRON_NOMBRE} ` +
         `en su calidad de Representante Legal en lo sucesivo "EL PATRON" y por la otra el C. ` +
         `${contrato.nombre}, a quien en lo sucesivo se le denominará "EL TRABAJADOR", ` +
         `quienes están conformes en sujetarse al tenor de los siguientes DECLARACIONES Y CLAUSULAS:`,
@@ -680,7 +680,7 @@ export function buildContratoHoraTemplate(contrato: ContratoData): ContractTempl
     {
       text:
         "CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO CON JORNADA REDUCIDA, que celebran por una parte el " +
-        `${PATRON_ENTIDAD}, representada en este acto por la C. ${PATRON_NOMBRE} en su calidad de Representante Legal en lo ` +
+        `${PATRON_ENTIDAD}, representada en este acto por la ${PATRON_NOMBRE} en su calidad de Representante Legal en lo ` +
         'sucesivo "EL PATRON" y por la otra el C. ' +
         `${contrato.nombre}, a quien en lo sucesivo se le denominará "EL TRABAJADOR", quienes están conformes en ` +
         "sujetarse al tenor de los siguientes DECLARACIONES Y CLAUSULAS:",
@@ -773,7 +773,7 @@ export function buildContratoHoraTemplate(contrato: ContratoData): ContractTempl
     },
     {
       text:
-        `OCTAVA. - "EL TRABAJADOR" percibirá por la prestación de sus servicios la cantidad de $${salarioFormato} (${salarioTexto}), por hora. Los cuáles serán cubiertos por quincenas vencidas los días 15 y 30 de cada mes en moneda nacional del año corriente. El pago se hará dentro de su jornada de trabajo o inmediatamente después a la conclusión de la misma en el en el lugar de la prestación de sus servicios, sin perjuicio de que el pago se haga en los términos estipulados en el párrafo siguiente:`,
+        `OCTAVA. - "EL TRABAJADOR" percibirá por la prestación de sus servicios la cantidad de ${salarioFormato} (${salarioTexto}), por hora. Los cuáles serán cubiertos por quincenas vencidas los días 15 y 30 de cada mes en moneda nacional del año corriente. El pago se hará dentro de su jornada de trabajo o inmediatamente después a la conclusión de la misma en el en el lugar de la prestación de sus servicios, sin perjuicio de que el pago se haga en los términos estipulados en el párrafo siguiente:`,
     },
     {
       text:

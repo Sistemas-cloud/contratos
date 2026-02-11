@@ -19,11 +19,13 @@ export default function DashboardPage() {
   }, []);
 
   const fetchStats = async () => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 s timeout
     try {
       const [res1, res2, res3] = await Promise.all([
-        fetch("/api/contratos?tipo=determinado"),
-        fetch("/api/contratos?tipo=indeterminado"),
-        fetch("/api/contratos?tipo=hora"),
+        fetch("/api/contratos?tipo=determinado", { signal: controller.signal }),
+        fetch("/api/contratos?tipo=indeterminado", { signal: controller.signal }),
+        fetch("/api/contratos?tipo=hora", { signal: controller.signal }),
       ]);
 
       const data1 = await res1.json();
@@ -38,7 +40,9 @@ export default function DashboardPage() {
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
+      setStats({ total: 0, determinado: 0, indeterminado: 0, hora: 0 });
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };

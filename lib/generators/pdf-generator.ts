@@ -158,29 +158,37 @@ const renderTemplateToPdf = (template: ContractTemplate, filename: string) => {
   // Más espacio antes del bloque de firmas para que quepa la firma manuscrita
   y += 22;
 
+  const lineStr = "_______________________________________";
+  const lineWidth = doc.getTextWidth(lineStr);
+  const halfPage = pageWidth / 2;
+  const leftCenterX = margin + lineWidth / 2;
+  const rightCenterX = pageWidth - margin - lineWidth / 2;
+
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
-  doc.text("_______________________________________", margin, y);
-  doc.text("_______________________________________", pageWidth - margin - 60, y);
+
+  // Bloque 1: Patrón (izq) y Trabajador (der)
+  doc.text(lineStr, margin, y);
+  doc.text(lineStr, pageWidth - margin - lineWidth, y);
   y += 12;
-  doc.text(template.firmas.patronNombre, margin + 10, y);
-  doc.text(template.firmas.trabajadorNombre, pageWidth - margin - 50, y);
+  doc.text(template.firmas.patronNombre, leftCenterX, y, { align: "center" });
+  doc.text(template.firmas.trabajadorNombre, rightCenterX, y, { align: "center" });
   y += 6;
-  doc.text(template.firmas.patronEntidad, margin + 10, y);
-  doc.text(template.firmas.trabajadorCargo, pageWidth - margin - 50, y);
+  doc.text(template.firmas.patronEntidad, leftCenterX, y, { align: "center" });
+  doc.text(template.firmas.trabajadorCargo, rightCenterX, y, { align: "center" });
   y += 6;
-  doc.text(template.firmas.patronCargo, margin + 10, y);
+  doc.text(template.firmas.patronCargo, leftCenterX, y, { align: "center" });
 
   // Más espacio entre bloque Patrón/Trabajador y bloque Testigos
   y += 24;
-  doc.text("_______________________________________", margin, y);
-  doc.text("_______________________________________", pageWidth - margin - 60, y);
+  doc.text(lineStr, margin, y);
+  doc.text(lineStr, pageWidth - margin - lineWidth, y);
   y += 12;
-  doc.text(template.testigos.testigo1, margin + 10, y);
-  doc.text(template.testigos.testigo2, pageWidth - margin - 50, y);
+  doc.text(template.testigos.testigo1, leftCenterX, y, { align: "center" });
+  doc.text(template.testigos.testigo2, rightCenterX, y, { align: "center" });
   y += 6;
-  doc.text("Testigo", margin + 20, y);
-  doc.text("Testigo", pageWidth - margin - 40, y);
+  doc.text("Testigo", leftCenterX, y, { align: "center" });
+  doc.text("Testigo", rightCenterX, y, { align: "center" });
 
   doc.save(filename);
 };

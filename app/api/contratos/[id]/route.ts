@@ -4,12 +4,12 @@ import { cookies } from "next/headers";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json();
     const supabase = createServiceClient();
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const userId = cookieStore.get("user_id")?.value;
     const userNivel = cookieStore.get("user_nivel")?.value;
 
@@ -29,7 +29,8 @@ export async function PUT(
     }
 
     const { tipo, ...data } = body;
-    const contratoId = Array.isArray(params.id) ? params.id[0] : params.id;
+    const resolvedParams = await params;
+    const contratoId = Array.isArray(resolvedParams.id) ? resolvedParams.id[0] : resolvedParams.id;
 
     // Preparar datos comunes
     const commonData = {
@@ -124,12 +125,12 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Usar Service Role Key para bypass RLS
     const supabase = createServiceClient();
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const userId = cookieStore.get("user_id")?.value;
     const userNivel = cookieStore.get("user_nivel")?.value;
 
@@ -173,10 +174,11 @@ export async function DELETE(
       );
     }
 
+    const resolvedParams = await params;
     const { error } = await supabase
       .from(tableName)
       .delete()
-      .eq("id", params.id);
+      .eq("id", resolvedParams.id);
 
     if (error) throw error;
 

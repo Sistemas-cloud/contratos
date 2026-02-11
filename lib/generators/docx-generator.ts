@@ -3,7 +3,19 @@
  * Usa docx para crear documentos .docx on-demand
  */
 
-import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel } from "docx";
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  AlignmentType,
+  HeadingLevel,
+  Table,
+  TableRow,
+  TableCell,
+  WidthType,
+  BorderStyle,
+} from "docx";
 import { saveAs } from "file-saver";
 import type { ContratoData } from "./pdf-generator";
 import {
@@ -32,10 +44,10 @@ const crearParrafo = (texto: string, bold = false, align: typeof AlignmentType[k
 };
 
 const renderTemplateToDocx = async (template: ContractTemplate, filename: string) => {
-  const paragraphs: Paragraph[] = [];
+  const children: (Paragraph | Table)[] = [];
 
   template.titleLines.forEach((title) => {
-    paragraphs.push(
+    children.push(
       new Paragraph({
         text: title,
         heading: HeadingLevel.HEADING_1,
@@ -57,7 +69,7 @@ const renderTemplateToDocx = async (template: ContractTemplate, filename: string
       alignment = AlignmentType.LEFT;
     }
     
-    paragraphs.push(
+    children.push(
       crearParrafo(
         paragraph.text,
         paragraph.bold,
@@ -66,70 +78,145 @@ const renderTemplateToDocx = async (template: ContractTemplate, filename: string
     );
   });
 
-  paragraphs.push(new Paragraph({ text: "", spacing: { after: 400 } }));
-  paragraphs.push(
+  const lineStr = "_______________________________________";
+  const celdaCentrada = (texto: string) =>
     new Paragraph({
-      children: [
-        new TextRun({ text: "_______________________________________" }),
-        new TextRun({ text: "\t\t\t\t" }),
-        new TextRun({ text: "_______________________________________" }),
-      ],
-    })
-  );
-  paragraphs.push(
-    new Paragraph({
-      children: [
-        new TextRun({ text: template.firmas.patronNombre }),
-        new TextRun({ text: "\t\t\t\t" }),
-        new TextRun({ text: template.firmas.trabajadorNombre }),
-      ],
-    })
-  );
-  paragraphs.push(
-    new Paragraph({
-      children: [
-        new TextRun({ text: template.firmas.patronEntidad }),
-        new TextRun({ text: "\t\t\t\t" }),
-        new TextRun({ text: template.firmas.trabajadorCargo }),
-      ],
-    })
-  );
-  paragraphs.push(new Paragraph({ text: template.firmas.patronCargo }));
+      children: [new TextRun({ text: texto, font: "Arial", size: 18 })],
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 80 },
+    });
 
-  paragraphs.push(new Paragraph({ text: "", spacing: { after: 400 } }));
-  paragraphs.push(
-    new Paragraph({
-      children: [
-        new TextRun({ text: "_______________________________________" }),
-        new TextRun({ text: "\t\t\t\t" }),
-        new TextRun({ text: "_______________________________________" }),
-      ],
-    })
-  );
-  paragraphs.push(
-    new Paragraph({
-      children: [
-        new TextRun({ text: template.testigos.testigo1 }),
-        new TextRun({ text: "\t\t\t\t" }),
-        new TextRun({ text: template.testigos.testigo2 }),
-      ],
-    })
-  );
-  paragraphs.push(
-    new Paragraph({
-      children: [
-        new TextRun({ text: "Testigo" }),
-        new TextRun({ text: "\t\t\t\t" }),
-        new TextRun({ text: "Testigo" }),
-      ],
-    })
-  );
+  const sinBorde = {
+    top: { style: BorderStyle.NONE, size: 0 },
+    bottom: { style: BorderStyle.NONE, size: 0 },
+    left: { style: BorderStyle.NONE, size: 0 },
+    right: { style: BorderStyle.NONE, size: 0 },
+  };
+
+  children.push(new Paragraph({ text: "", spacing: { after: 400 } }));
+
+  // Tabla de firmas: dos columnas centradas (Patrón | Trabajador y Testigos)
+  const tablaFirmas = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [50, 50],
+    borders: {
+      top: { style: BorderStyle.NONE, size: 0 },
+      bottom: { style: BorderStyle.NONE, size: 0 },
+      left: { style: BorderStyle.NONE, size: 0 },
+      right: { style: BorderStyle.NONE, size: 0 },
+      insideHorizontal: { style: BorderStyle.NONE, size: 0 },
+      insideVertical: { style: BorderStyle.NONE, size: 0 },
+    },
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [celdaCentrada(lineStr)],
+            borders: sinBorde,
+          }),
+          new TableCell({
+            children: [celdaCentrada(lineStr)],
+            borders: sinBorde,
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [celdaCentrada(template.firmas.patronNombre)],
+            borders: sinBorde,
+          }),
+          new TableCell({
+            children: [celdaCentrada(template.firmas.trabajadorNombre)],
+            borders: sinBorde,
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [celdaCentrada(template.firmas.patronEntidad)],
+            borders: sinBorde,
+          }),
+          new TableCell({
+            children: [celdaCentrada(template.firmas.trabajadorCargo)],
+            borders: sinBorde,
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [celdaCentrada(template.firmas.patronCargo)],
+            borders: sinBorde,
+          }),
+          new TableCell({ children: [new Paragraph({ text: "" })] }),
+        ],
+      }),
+    ],
+  });
+
+  children.push(tablaFirmas);
+  children.push(new Paragraph({ text: "", spacing: { after: 400 } }));
+
+  const tablaTestigos = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [50, 50],
+    borders: {
+      top: { style: BorderStyle.NONE, size: 0 },
+      bottom: { style: BorderStyle.NONE, size: 0 },
+      left: { style: BorderStyle.NONE, size: 0 },
+      right: { style: BorderStyle.NONE, size: 0 },
+      insideHorizontal: { style: BorderStyle.NONE, size: 0 },
+      insideVertical: { style: BorderStyle.NONE, size: 0 },
+    },
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [celdaCentrada(lineStr)],
+            borders: sinBorde,
+          }),
+          new TableCell({
+            children: [celdaCentrada(lineStr)],
+            borders: sinBorde,
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [celdaCentrada(template.testigos.testigo1)],
+            borders: sinBorde,
+          }),
+          new TableCell({
+            children: [celdaCentrada(template.testigos.testigo2)],
+            borders: sinBorde,
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [celdaCentrada("Testigo")],
+            borders: sinBorde,
+          }),
+          new TableCell({
+            children: [celdaCentrada("Testigo")],
+            borders: sinBorde,
+          }),
+        ],
+      }),
+    ],
+  });
+
+  children.push(tablaTestigos);
 
   const doc = new Document({
     sections: [
       {
         properties: {},
-        children: paragraphs,
+        children,
       },
     ],
   });

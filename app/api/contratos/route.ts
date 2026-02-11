@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     // Usar Service Role Key para bypass RLS
     const supabase = createServiceClient();
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const userId = cookieStore.get("user_id")?.value;
     const userNivel = cookieStore.get("user_nivel")?.value;
 
@@ -130,9 +130,22 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // Usar Service Role Key para bypass RLS
+    const missing: string[] = [];
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) missing.push("NEXT_PUBLIC_SUPABASE_URL");
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) missing.push("SUPABASE_SERVICE_ROLE_KEY");
+    if (missing.length > 0) {
+      console.error("[GET CONTRATOS] Faltan variables de entorno:", missing.join(", "));
+      return NextResponse.json(
+        {
+          error: "Configuración del servidor incompleta",
+          hint: "Asegúrate de tener un archivo .env.local con NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY. Reinicia el servidor (npm run dev) después de cambiar .env.local.",
+          missing,
+        },
+        { status: 500 }
+      );
+    }
     const supabase = createServiceClient();
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const userId = cookieStore.get("user_id")?.value;
     const userNivel = cookieStore.get("user_nivel")?.value;
 
