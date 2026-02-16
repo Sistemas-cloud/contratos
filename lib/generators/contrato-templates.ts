@@ -1,4 +1,4 @@
-import { fechaATexto, fechaATextoMinusculas, numeroATextoPesos } from "@/lib/utils/formatters";
+import { fechaATexto, fechaATextoMinusculas, formatearDias, numeroATextoPesos } from "@/lib/utils/formatters";
 import type { ContratoData } from "./pdf-generator";
 
 export type Paragraph = {
@@ -764,7 +764,7 @@ export function buildContratoHoraTemplate(contrato: ContratoData): ContractTempl
     {
       text:
         'SEXTA.- "EL PATRÓN" y "EL TRABAJADOR" convienen, conforme al artículo 59 de la Ley Federal del Trabajo, que el horario de labores será los días: ' +
-        `${contrato.dias}, distribuyéndose las horas de trabajo dentro del periodo comprendido entre las ${horario} horas, ` +
+        `${formatearDias(contrato.dias)}, distribuyéndose las horas de trabajo dentro del periodo comprendido entre las ${horario} horas, ` +
         "conforme a las necesidades del instituto, quien podrá modificar la distribución de dichas horas previo aviso al trabajador.",
     },
     {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
+import { ordenarDiasSemana } from "@/lib/utils/formatters";
 
 export async function PUT(
   request: NextRequest,
@@ -43,7 +44,12 @@ export async function PUT(
       domicilio: data.domicilio,
       curp: data.curp,
       funciones: data.funciones,
-      dias: Array.isArray(data.dias) ? data.dias.join(", ") : data.dias,
+      dias: (() => {
+        const arr = Array.isArray(data.dias)
+          ? data.dias
+          : String(data.dias || "").split(",").map((d: string) => d.trim()).filter(Boolean);
+        return ordenarDiasSemana(arr).join(", ");
+      })(),
       hora_entrada: data.hora_entrada,
       hora_salida: data.hora_salida,
       bene1: data.bene1,

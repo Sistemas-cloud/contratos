@@ -9,7 +9,7 @@ import { Loader2, FileText, Edit, ArrowLeft, FileDown, ChevronDown } from "lucid
 import Link from "next/link";
 import { generarPDF } from "@/lib/generators/pdf-generator";
 import { generarDOCX } from "@/lib/generators/docx-generator";
-import { formatearFechaLocal } from "@/lib/utils/formatters";
+import { formatearDias, formatearFechaLocal } from "@/lib/utils/formatters";
 
 export default function ContratoDetailPage() {
   const params = useParams();
@@ -419,7 +419,7 @@ export default function ContratoDetailPage() {
           </CardHeader>
           <CardContent className="space-y-2">
             <div>
-              <span className="font-medium">Días de trabajo:</span> {contrato.dias}
+              <span className="font-medium">Días de trabajo:</span> {formatearDias(contrato.dias || "")}
             </div>
             <div>
               <span className="font-medium">Hora de entrada:</span> {contrato.hora_entrada}

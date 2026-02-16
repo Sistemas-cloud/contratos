@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, Clock } from "lucide-react";
 import { TIPOS_CONTRATO, DIAS_SEMANA, ESTADOS_CIVILES, NACIONALIDADES } from "@/lib/constants";
+import { ordenarDiasSemana } from "@/lib/utils/formatters";
 
 export default function ContratoForm() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function ContratoForm() {
     try {
       const payload = {
         ...formData,
-        dias: formData.dias.join(","),
+        dias: ordenarDiasSemana([...formData.dias]).join(","),
         edad: parseInt(formData.edad),
         tipo: tipoContrato,
       };

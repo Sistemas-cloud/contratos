@@ -174,19 +174,53 @@ export function crearRangoHorario(horaInicio: string, horaFin: string): string {
   return `${formatearHora12(horaInicio)} - ${formatearHora12(horaFin)}`;
 }
 
+/** Orden de días de la semana para ordenar correctamente (lunes a domingo) */
+const ORDEN_DIAS_SEMANA = [
+  'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
+] as const;
+
 /**
- * Convierte una lista de días separados por comas en un string legible
- * Ejemplo: "Lunes,Martes,Miércoles" -> "Lunes, Martes y Miércoles"
+ * Ordena un array de días según el orden de la semana (lunes a sábado/domingo)
+ */
+export function ordenarDiasSemana(dias: string[]): string[] {
+  return [...dias].sort((a, b) => {
+    const idxA = ORDEN_DIAS_SEMANA.findIndex(d => 
+      d.toLowerCase() === (a || '').trim().toLowerCase()
+    );
+    const idxB = ORDEN_DIAS_SEMANA.findIndex(d => 
+      d.toLowerCase() === (b || '').trim().toLowerCase()
+    );
+    const posA = idxA >= 0 ? idxA : 999;
+    const posB = idxB >= 0 ? idxB : 999;
+    return posA - posB;
+  });
+}
+
+/** Días de lunes a sábado (sin domingo) */
+const LUNES_A_SABADO = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'] as const;
+
+/**
+ * Convierte una lista de días separados por comas en un string legible,
+ * ordenados de lunes a sábado (igual que los demás contratos)
+ * Si están todos los días de lunes a sábado, muestra "lunes a sábado"
+ * Ejemplo: "Jueves,Lunes,Martes,Miércoles,Viernes,Sábado" -> "lunes a sábado"
  */
 export function formatearDias(dias: string): string {
-  const diasArray = dias.split(',').map(d => d.trim());
-  
-  if (diasArray.length === 0) return '';
-  if (diasArray.length === 1) return diasArray[0];
-  if (diasArray.length === 2) return diasArray.join(' y ');
-  
-  const ultimoDia = diasArray.pop();
-  return diasArray.join(', ') + ' y ' + ultimoDia;
+  const diasArray = dias.split(',').map(d => d.trim()).filter(Boolean);
+  const ordenados = ordenarDiasSemana(diasArray);
+
+  // Si están todos los días de lunes a sábado, mostrar "lunes a sábado"
+  const normalized = ordenados.map(d => d.toLowerCase());
+  const todosLunesSabado = LUNES_A_SABADO.length === ordenados.length &&
+    LUNES_A_SABADO.every(d => normalized.includes(d.toLowerCase()));
+  if (todosLunesSabado) return 'lunes a sábado';
+
+  if (ordenados.length === 0) return '';
+  if (ordenados.length === 1) return ordenados[0];
+  if (ordenados.length === 2) return ordenados.join(' y ');
+
+  const ultimoDia = ordenados.pop();
+  return ordenados.join(', ') + ' y ' + ultimoDia;
 }
 
 /**
