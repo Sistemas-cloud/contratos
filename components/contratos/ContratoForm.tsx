@@ -11,7 +11,11 @@ import { Loader2, Clock } from "lucide-react";
 import { TIPOS_CONTRATO, DIAS_SEMANA, ESTADOS_CIVILES, NACIONALIDADES } from "@/lib/constants";
 import { ordenarDiasSemana } from "@/lib/utils/formatters";
 
-export default function ContratoForm() {
+type ContratoFormProps = {
+  userNivel: number;
+};
+
+export default function ContratoForm({ userNivel }: ContratoFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [tipoContrato, setTipoContrato] = useState<string>("");
@@ -50,6 +54,7 @@ export default function ContratoForm() {
     fecha_inicio_esc: "",
     fecha_termino_esc: "",
     costo_hora: "",
+    instituto: userNivel === 3,
   });
 
   const handleDiaChange = (dia: string) => {
@@ -80,6 +85,7 @@ export default function ContratoForm() {
         dias: ordenarDiasSemana([...formData.dias]).join(","),
         edad: parseInt(formData.edad),
         tipo: tipoContrato,
+        instituto: userNivel === 1 ? false : userNivel === 3 ? true : formData.instituto,
       };
 
       const response = await fetch("/api/contratos", {
@@ -140,6 +146,36 @@ export default function ContratoForm() {
 
       {tipoContrato && (
         <>
+          <Card>
+            <CardHeader>
+              <CardTitle>Instituto</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {userNivel === 2 ? (
+                <div>
+                  <Label>Instituto para este contrato *</Label>
+                  <select
+                    value={formData.instituto ? "true" : "false"}
+                    onChange={(e) =>
+                      setFormData({ ...formData, instituto: e.target.value === "true" })
+                    }
+                    className="w-full px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    required
+                  >
+                    <option value="false">Instituto Educativo Winston (C. 2 209)</option>
+                    <option value="true">Instituto Winston Churchill (C. 3 309)</option>
+                  </select>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  {userNivel === 3
+                    ? "Tu nivel de usuario siempre genera contratos para Instituto Winston Churchill (C. 3 309)."
+                    : "Tu nivel de usuario siempre genera contratos para Instituto Educativo Winston (C. 2 209)."}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Datos del Trabajador</CardTitle>

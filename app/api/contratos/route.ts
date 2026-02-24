@@ -3,6 +3,14 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { ordenarDiasSemana } from "@/lib/utils/formatters";
 
+const resolveInstitutoByNivel = (nivelUsuario: number, value: unknown): boolean => {
+  if (nivelUsuario === 1) return false;
+  if (nivelUsuario === 3) return true;
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") return value.toLowerCase() === "true";
+  return false;
+};
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -59,6 +67,7 @@ export async function POST(request: NextRequest) {
       porc2: data.porc2 ? parseInt(data.porc2) : null,
       testigo1: data.testigo1,
       testigo2: data.testigo2,
+      instituto: resolveInstitutoByNivel(nivelUsuario, data.instituto),
       nivel: nivelUsuario, // Guardar el nivel del usuario que crea el contrato
       created_by: parseInt(userId),
     };

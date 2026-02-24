@@ -33,6 +33,7 @@ export interface ContratoBase {
   dias: string; // Días separados por comas
   hora_entrada: string; // formato HH:mm
   hora_salida: string; // formato HH:mm
+  instituto: boolean;
   
   // Beneficiarios
   bene1: string;

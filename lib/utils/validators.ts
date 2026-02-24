@@ -61,7 +61,8 @@ const contratoBaseSchema = z.object({
   testigo2: z.string().min(1, 'Testigo 2 requerido'),
   
   // Metadata
-  nivel: z.number().int().min(1).max(2).default(1),
+  nivel: z.number().int().min(1).max(3).default(1),
+  instituto: z.boolean().optional(),
   nombre_act: z.string().optional(),
 });
 
@@ -138,7 +139,7 @@ export const usuarioSchema = z.object({
   usuario_nombre: z.string().min(1, 'Nombre requerido'),
   usuario_app: z.string().optional(),
   usuario_apm: z.string().optional(),
-  nivel: z.number().int().min(1).max(2).default(1),
+  nivel: z.number().int().min(1).max(3).default(1),
 });
 
 // Exportar tipos inferidos

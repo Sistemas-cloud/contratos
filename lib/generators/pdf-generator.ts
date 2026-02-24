@@ -39,6 +39,7 @@ export interface ContratoData {
   // Testigos
   testigo1: string;
   testigo2: string;
+  instituto?: boolean;
   
   // Específicos por tipo
   tipo: 'determinado' | 'indeterminado' | 'hora';

@@ -3,6 +3,14 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { ordenarDiasSemana } from "@/lib/utils/formatters";
 
+const resolveInstitutoByNivel = (nivelUsuario: number, value: unknown): boolean => {
+  if (nivelUsuario === 1) return false;
+  if (nivelUsuario === 3) return true;
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") return value.toLowerCase() === "true";
+  return false;
+};
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -29,6 +37,7 @@ export async function PUT(
       );
     }
 
+    const nivelUsuario = parseInt(userNivel);
     const { tipo, ...data } = body;
     const resolvedParams = await params;
     const contratoId = Array.isArray(resolvedParams.id) ? resolvedParams.id[0] : resolvedParams.id;
@@ -60,6 +69,7 @@ export async function PUT(
       porc2: data.porc2 ? parseInt(data.porc2) : null,
       testigo1: data.testigo1,
       testigo2: data.testigo2,
+      instituto: resolveInstitutoByNivel(nivelUsuario, data.instituto),
     };
 
     let result: any;

@@ -69,6 +69,7 @@ export interface Database {
           porc2: number | null
           testigo1: string | null
           testigo2: string | null
+          instituto: boolean
           nivel: number
           nombre_act: string | null
           fecha_registro: string
@@ -103,6 +104,7 @@ export interface Database {
           porc2?: number | null
           testigo1?: string | null
           testigo2?: string | null
+          instituto?: boolean
           nivel?: number
           nombre_act?: string | null
           fecha_registro?: string
@@ -137,6 +139,7 @@ export interface Database {
           porc2?: number | null
           testigo1?: string | null
           testigo2?: string | null
+          instituto?: boolean
           nivel?: number
           nombre_act?: string | null
           fecha_registro?: string
@@ -174,6 +177,7 @@ export interface Database {
           porc2: number | null
           testigo1: string | null
           testigo2: string | null
+          instituto: boolean
           nivel: number
           nombre_act: string | null
           fecha_registro: string
@@ -209,6 +213,7 @@ export interface Database {
           porc2?: number | null
           testigo1?: string | null
           testigo2?: string | null
+          instituto?: boolean
           nivel?: number
           nombre_act?: string | null
           fecha_registro?: string
@@ -244,6 +249,7 @@ export interface Database {
           porc2?: number | null
           testigo1?: string | null
           testigo2?: string | null
+          instituto?: boolean
           nivel?: number
           nombre_act?: string | null
           fecha_registro?: string
@@ -281,6 +287,7 @@ export interface Database {
           porc2: number | null
           testigo1: string | null
           testigo2: string | null
+          instituto: boolean
           nivel: number
           nombre_act: string | null
           fecha_registro: string
@@ -316,6 +323,7 @@ export interface Database {
           porc2?: number | null
           testigo1?: string | null
           testigo2?: string | null
+          instituto?: boolean
           nivel?: number
           nombre_act?: string | null
           fecha_registro?: string
@@ -351,6 +359,7 @@ export interface Database {
           porc2?: number | null
           testigo1?: string | null
           testigo2?: string | null
+          instituto?: boolean
           nivel?: number
           nombre_act?: string | null
           fecha_registro?: string

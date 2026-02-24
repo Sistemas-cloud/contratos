@@ -24,9 +24,20 @@ export type ContractTemplate = {
 };
 
 const PATRON_NOMBRE = "C. ANA MATILDE ÁVILA AZUARA";
-const PATRON_ENTIDAD = "INSTITUTO WINSTON CHURCHILL, A.C.";
 const PATRON_CARGO = "REPRESENTANTE LEGAL";
 const TRABAJADOR_CARGO = "TRABAJADOR";
+const INSTITUTO_EDUCATIVO = "INSTITUTO EDUCATIVO WINSTON";
+const INSTITUTO_CHURCHILL = "INSTITUTO WINSTON CHURCHILL, A.C.";
+const DIRECCION_INSTITUTO_EDUCATIVO = "C. 2 209, Jardín 20 de Noviembre, 89440 Cd Madero, Tamps.";
+const DIRECCION_INSTITUTO_CHURCHILL = "C. 3 309, Jardín 20 de Noviembre, 89440 Cd Madero, Tamps.";
+
+const getInstitutoConfig = (instituto?: boolean) => {
+  const esChurchill = instituto ?? true;
+  return {
+    patronEntidad: esChurchill ? INSTITUTO_CHURCHILL : INSTITUTO_EDUCATIVO,
+    direccionCentro: esChurchill ? DIRECCION_INSTITUTO_CHURCHILL : DIRECCION_INSTITUTO_EDUCATIVO,
+  };
+};
 
 const formatMoney = (value: number): string => {
   const fixed = value.toFixed(2);
@@ -48,18 +59,19 @@ export function buildContratoDeterminadoTemplate(contrato: ContratoData): Contra
   const salarioFormato = formatMoney(salario);
   const funcionesList = splitFunciones(contrato.funciones);
   const horario = `${contrato.hora_entrada} - ${contrato.hora_salida}`;
+  const { patronEntidad, direccionCentro } = getInstitutoConfig(contrato.instituto);
 
   const paragraphs: Paragraph[] = [
     {
       text:
         `CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO, que celebran por una parte ` +
-        `${PATRON_ENTIDAD} representada en este acto por la ${PATRON_NOMBRE} ` +
+        `${patronEntidad} representada en este acto por la ${PATRON_NOMBRE} ` +
         `en su calidad de Representante Legal en lo sucesivo "EL PATRON" y por la otra el C. ` +
         `${contrato.nombre}, a quien en lo sucesivo se le denominará "EL TRABAJADOR", ` +
         `quienes están conformes en sujetarse al tenor de los siguientes DECLARACIONES Y CLAUSULAS:`,
     },
     { text: "DECLARACIONES", bold: true, align: "center" },
-    { text: 'I) "EL PATRON" INSTITUTO WINSTON CHURCHILL, A.C. declara a través de su representante:' },
+    { text: `I) "EL PATRON" ${patronEntidad} declara a través de su representante:` },
     {
       text:
         "1.- Ser una persona moral legalmente constituida bajo la Ley General de Sociedades Mercantiles con el " +
@@ -67,8 +79,7 @@ export function buildContratoDeterminadoTemplate(contrato: ContratoData): Contra
         "veintitrés de julio de mil novecientos noventa y nueve, ante la fe del LIC. FRANCISCO HACES " +
         "ARGUELLES, titular de la Notaría Pública Número 38, con ejercicio en el Segundo Distrito Judicial del " +
         "Estado, que comprende los municipios de Tampico, Ciudad Madero y Altamira, e inscrita debidamente en " +
-        "el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en calle 3 número 309, " +
-        "colonia Jardín 20 de noviembre, ciudad Madero, Tamaulipas y legalmente representada por la C. Ing. " +
+        `el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en ${direccionCentro} y legalmente representada por la C. Ing. ` +
         "Ana Matilde Ávila Azuara, que cuenta con facultades suficientes para celebrar el presente convenio, " +
         "acreditando su personalidad en términos del documento ya mencionado, facultades que a la fecha no le han " +
         "sido revocadas o modificadas en forma alguna.",
@@ -144,7 +155,7 @@ export function buildContratoDeterminadoTemplate(contrato: ContratoData): Contra
     {
       text:
         'TERCERA. - "EL TRABAJADOR" tendrá como domicilio fijo de su fuente de trabajo, para la prestación de los ' +
-        "servicios, el ubicado en calle 3 número 309, colonia Jardín 20 de noviembre, ciudad Madero, Tamaulipas;\n" +
+        `servicios, el ubicado en ${direccionCentro};\n` +
         '"LAS PARTES" acuerdan que dicho domicilio podrá ser modificado de acuerdo a las necesidades de "EL PATRON", ' +
         'previo aviso por escrito a "EL TRABAJADOR". Para el caso que en el nuevo lugar de prestación de servicios ' +
         'que le fuera lasignado variara el horario de labores, "EL TRABAJADOR" acepta allanarse a dicha modalidad.',
@@ -376,7 +387,7 @@ export function buildContratoDeterminadoTemplate(contrato: ContratoData): Contra
     paragraphs,
     firmas: {
       patronNombre: PATRON_NOMBRE,
-      patronEntidad: PATRON_ENTIDAD,
+      patronEntidad,
       patronCargo: PATRON_CARGO,
       trabajadorNombre: `C. ${contrato.nombre}`,
       trabajadorCargo: TRABAJADOR_CARGO,
@@ -395,18 +406,19 @@ export function buildContratoIndeterminadoTemplate(contrato: ContratoData): Cont
   const funcionesList = splitFunciones(contrato.funciones);
   const horario = `${contrato.hora_entrada} - ${contrato.hora_salida}`;
   const fechaLeidoTexto = fechaATexto(contrato.fecha_leido || "").toUpperCase();
+  const { patronEntidad, direccionCentro } = getInstitutoConfig(contrato.instituto);
 
   const paragraphs: Paragraph[] = [
     {
       text:
         `CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO INDETERMINADO, que celebran por una parte ` +
-        `${PATRON_ENTIDAD} representada en este acto por la ${PATRON_NOMBRE} ` +
+        `${patronEntidad} representada en este acto por la ${PATRON_NOMBRE} ` +
         `en su calidad de Representante Legal en lo sucesivo "EL PATRON" y por la otra el C. ` +
         `${contrato.nombre}, a quien en lo sucesivo se le denominará "EL TRABAJADOR", ` +
         `quienes están conformes en sujetarse al tenor de los siguientes DECLARACIONES Y CLAUSULAS:`,
     },
     { text: "DECLARACIONES", bold: true, align: "center" },
-    { text: '"EL PATRON" INSTITUTO WINSTON CHURCHILL, A.C. declara a través de su representante:' },
+    { text: `"EL PATRON" ${patronEntidad} declara a través de su representante:` },
     {
       text:
         "1.- Ser una persona moral legalmente constituida bajo la Ley General de Sociedades Mercantiles con el " +
@@ -414,8 +426,7 @@ export function buildContratoIndeterminadoTemplate(contrato: ContratoData): Cont
         "veintitrés de julio de mil novecientos noventa y nueve, ante la fe del LIC. FRANCISCO HACES " +
         "ARGUELLES, titular de la Notaría Pública Número 38, con ejercicio en el Segundo Distrito Judicial del " +
         "Estado, que comprende los municipios de Tampico, Ciudad Madero y Altamira, e inscrita debidamente en " +
-        "el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en calle 3 número 309, " +
-        "colonia Jardín 20 de noviembre, ciudad Madero, Tamaulipas y legalmente representada por la C. Ing. " +
+        `el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en ${direccionCentro} y legalmente representada por la C. Ing. ` +
         "Ana Matilde Ávila Azuara, que cuenta con facultades suficientes para celebrar el presente convenio, " +
         "acreditando su personalidad en términos del documento ya mencionado, facultades que a la fecha no le han " +
         "sido revocadas o modificadas en forma alguna.",
@@ -463,7 +474,7 @@ export function buildContratoIndeterminadoTemplate(contrato: ContratoData): Cont
     },
     {
       text:
-        '"EL TRABAJADOR" tendrá como domicilio fijo de su fuente de trabajo, para la prestación de los servicios, el ubicado en calle 3 número 309, colonia Jardín 20 de noviembre, ciudad Madero, Tamaulipas;\n"LAS PARTES" acuerdan que dicho domicilio podrá ser modificado de acuerdo a las necesidades de "EL PATRON", previo aviso por escrito a "EL TRABAJADOR". Para el caso que en el nuevo lugar de prestación de servicios que le fuera lasignado variara el horario de labores, "EL TRABAJADOR" acepta allanarse a dicha modalidad.',
+        `"EL TRABAJADOR" tendrá como domicilio fijo de su fuente de trabajo, para la prestación de los servicios, el ubicado en ${direccionCentro};\n"LAS PARTES" acuerdan que dicho domicilio podrá ser modificado de acuerdo a las necesidades de "EL PATRON", previo aviso por escrito a "EL TRABAJADOR". Para el caso que en el nuevo lugar de prestación de servicios que le fuera lasignado variara el horario de labores, "EL TRABAJADOR" acepta allanarse a dicha modalidad.`,
     },
     {
       text:
@@ -654,7 +665,7 @@ export function buildContratoIndeterminadoTemplate(contrato: ContratoData): Cont
     paragraphs,
     firmas: {
       patronNombre: PATRON_NOMBRE,
-      patronEntidad: PATRON_ENTIDAD,
+      patronEntidad,
       patronCargo: PATRON_CARGO,
       trabajadorNombre: `C. ${contrato.nombre}`,
       trabajadorCargo: TRABAJADOR_CARGO,
@@ -675,18 +686,19 @@ export function buildContratoHoraTemplate(contrato: ContratoData): ContractTempl
   const fechaIni = fechaATextoMinusculas(contrato.fecha_inicio_esc || "");
   const fechaTer = fechaATextoMinusculas(contrato.fecha_termino_esc || "");
   const fechaContratoTexto = fechaATexto(contrato.fecha_contrato || "");
+  const { patronEntidad, direccionCentro } = getInstitutoConfig(contrato.instituto);
 
   const paragraphs: Paragraph[] = [
     {
       text:
         "CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO CON JORNADA REDUCIDA, que celebran por una parte el " +
-        `${PATRON_ENTIDAD}, representada en este acto por la ${PATRON_NOMBRE} en su calidad de Representante Legal en lo ` +
+        `${patronEntidad}, representada en este acto por la ${PATRON_NOMBRE} en su calidad de Representante Legal en lo ` +
         'sucesivo "EL PATRON" y por la otra el C. ' +
         `${contrato.nombre}, a quien en lo sucesivo se le denominará "EL TRABAJADOR", quienes están conformes en ` +
         "sujetarse al tenor de los siguientes DECLARACIONES Y CLAUSULAS:",
     },
     { text: "DECLARACIONES", bold: true, align: "center" },
-    { text: 'I) "EL PATRON" INSTITUTO WINSTON CHURCHILL, A.C. declara a través de su representante:' },
+    { text: `I) "EL PATRON" ${patronEntidad} declara a través de su representante:` },
     {
       text:
         "1.- Ser una persona moral legalmente constituida bajo la Ley General de Sociedades Mercantiles con el " +
@@ -694,8 +706,7 @@ export function buildContratoHoraTemplate(contrato: ContratoData): ContractTempl
         "veintitrés de julio de mil novecientos noventa y nueve, ante la fe del LIC. FRANCISCO HACES " +
         "ARGUELLES, titular de la Notaría Pública Número 38, con ejercicio en el Segundo Distrito Judicial del " +
         "Estado, que comprende los municipios de Tampico, Ciudad Madero y Altamira, e inscrita debidamente en " +
-        "el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en calle 3 número 309, " +
-        "colonia Jardín 20 de noviembre, ciudad Madero, Tamaulipas y legalmente representada por la C. Ing. " +
+        `el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en ${direccionCentro} y legalmente representada por la C. Ing. ` +
         "Ana Matilde Ávila Azuara, que cuenta con facultades suficientes para celebrar el presente convenio, " +
         "acreditando su personalidad en términos del documento ya mencionado, facultades que a la fecha no le han " +
         "sido revocadas o modificadas en forma alguna.",
@@ -749,7 +760,7 @@ export function buildContratoHoraTemplate(contrato: ContratoData): ContractTempl
     },
     {
       text:
-        'TERCERA. - "EL TRABAJADOR" tendrá como domicilio fijo de su fuente de trabajo, para la prestación de los servicios, el ubicado en (dirección del centro de trabajo);\n"LAS PARTES" acuerdan que dicho domicilio podrá ser modificado de acuerdo a las necesidades de "EL PATRON", previo aviso por escrito a "EL TRABAJADOR". Para el caso que en el nuevo lugar de prestación de servicios que le fuera lasignado variara el horario de labores, "EL TRABAJADOR" acepta allanarse a dicha modalidad.',
+        `TERCERA. - "EL TRABAJADOR" tendrá como domicilio fijo de su fuente de trabajo, para la prestación de los servicios, el ubicado en ${direccionCentro};\n"LAS PARTES" acuerdan que dicho domicilio podrá ser modificado de acuerdo a las necesidades de "EL PATRON", previo aviso por escrito a "EL TRABAJADOR". Para el caso que en el nuevo lugar de prestación de servicios que le fuera lasignado variara el horario de labores, "EL TRABAJADOR" acepta allanarse a dicha modalidad.`,
     },
     {
       text:
@@ -914,7 +925,7 @@ export function buildContratoHoraTemplate(contrato: ContratoData): ContractTempl
     paragraphs,
     firmas: {
       patronNombre: PATRON_NOMBRE,
-      patronEntidad: PATRON_ENTIDAD,
+      patronEntidad,
       patronCargo: PATRON_CARGO,
       trabajadorNombre: `C. ${contrato.nombre}`,
       trabajadorCargo: TRABAJADOR_CARGO,
