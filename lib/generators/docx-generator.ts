@@ -25,6 +25,9 @@ import {
   type ContractTemplate,
 } from "./contrato-templates";
 
+// 2025-03-17: Fuente Arial tamaño 8 en todo el documento (size en docx = half-points, 16 = 8pt)
+const FUENTE_ARIAL_8 = { font: "Arial" as const, size: 16 };
+
 const crearParrafo = (texto: string, bold = false, align: typeof AlignmentType[keyof typeof AlignmentType] = AlignmentType.JUSTIFIED) => {
   const isListItem = texto.trim().startsWith("- "); // Detectar si es un elemento de lista
   const finalAlign = isListItem ? AlignmentType.LEFT : align; // Forzar LEFT para elementos de lista
@@ -34,8 +37,7 @@ const crearParrafo = (texto: string, bold = false, align: typeof AlignmentType[k
       new TextRun({
         text: texto,
         bold,
-        font: "Arial",
-        size: 18,
+        ...FUENTE_ARIAL_8,
       }),
     ],
     alignment: finalAlign,
@@ -49,7 +51,7 @@ const renderTemplateToDocx = async (template: ContractTemplate, filename: string
   template.titleLines.forEach((title) => {
     children.push(
       new Paragraph({
-        text: title,
+        children: [new TextRun({ text: title, bold: true, ...FUENTE_ARIAL_8 })],
         heading: HeadingLevel.HEADING_1,
         alignment: AlignmentType.CENTER,
         spacing: { after: 200 },
@@ -81,7 +83,7 @@ const renderTemplateToDocx = async (template: ContractTemplate, filename: string
   const lineStr = "_______________________________________";
   const celdaCentrada = (texto: string) =>
     new Paragraph({
-      children: [new TextRun({ text: texto, font: "Arial", size: 18 })],
+      children: [new TextRun({ text: texto, ...FUENTE_ARIAL_8 })],
       alignment: AlignmentType.CENTER,
       spacing: { after: 80 },
     });

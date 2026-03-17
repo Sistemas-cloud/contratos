@@ -107,8 +107,9 @@ const renderTemplateToPdf = (template: ContractTemplate, filename: string) => {
   const margin = 20;
   let y = 20;
 
+  // 2025-03-17: Fuente y tamaño unificados: equivalente Arial (helvetica en PDF estándar), tamaño 8
   doc.setFont("helvetica");
-  doc.setFontSize(10);
+  doc.setFontSize(8);
 
   template.titleLines.forEach((title) => {
     doc.setFont("helvetica", "bold");
@@ -117,7 +118,6 @@ const renderTemplateToPdf = (template: ContractTemplate, filename: string) => {
   });
   y += 4;
 
-  doc.setFontSize(8);
   template.paragraphs.forEach((paragraph) => {
     const align = paragraph.align === "center" ? "center" : "left";
     doc.setFont("helvetica", paragraph.bold ? "bold" : "normal");
