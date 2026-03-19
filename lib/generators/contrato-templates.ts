@@ -39,6 +39,35 @@ const getInstitutoConfig = (instituto?: boolean) => {
   };
 };
 
+// 2026-03-17: Texto solicitado para contratos educativos (usuario nivel 1) en Declaraciones I) inciso 1.
+const getDeclaracionPatronUno = (instituto?: boolean, direccionCentro?: string): string => {
+  const esChurchill = instituto ?? true;
+  if (!esChurchill) {
+    return (
+      "1.- Ser una persona moral legalmente constituida bajo la Ley General de Sociedades Mercantiles con el Instrumento Público " +
+      "número nueve mil cuatrocientos veintidós, Volumen doscientos cuarenta, de fecha veintitrés de julio de mil novecientos " +
+      "noventa y nueve, ante la fe del LIC. CARLOS GONZÁLEZ MORALES, titular de la Notaría Pública Número 230, con ejercicio en " +
+      "el Segundo Distrito Judicial del Estado, que comprende los municipios de Tampico, Ciudad Madero y Altamira, e inscrita " +
+      "debidamente en Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en calle 2 número 209, colonia " +
+      "Jardín 20 de noviembre, ciudad Madero, Tamaulipas y legalmente representada por la C. Ing. Ana Matilde Ávila Azuara, que " +
+      "cuenta con facultades suficientes para celebrar el presente convenio, acreditando su personalidad en términos del documento " +
+      "ya mencionado, facultades que a la fecha no le han sido revocadas o modificadas en forma alguna."
+    );
+  }
+
+  return (
+    "1.- Ser una persona moral legalmente constituida bajo la Ley General de Sociedades Mercantiles con el " +
+    "Instrumento Público número nueve mil cuatrocientos veintidós, Volumen doscientos cuarenta, de fecha " +
+    "veintitrés de julio de mil novecientos noventa y nueve, ante la fe del LIC. FRANCISCO HACES " +
+    "ARGUELLES, titular de la Notaría Pública Número 38, con ejercicio en el Segundo Distrito Judicial del " +
+    "Estado, que comprende los municipios de Tampico, Ciudad Madero y Altamira, e inscrita debidamente en " +
+    `el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en ${direccionCentro || DIRECCION_INSTITUTO_CHURCHILL} y legalmente representada por la C. Ing. ` +
+    "Ana Matilde Ávila Azuara, que cuenta con facultades suficientes para celebrar el presente convenio, " +
+    "acreditando su personalidad en términos del documento ya mencionado, facultades que a la fecha no le han " +
+    "sido revocadas o modificadas en forma alguna."
+  );
+};
+
 const formatMoney = (value: number): string => {
   const fixed = value.toFixed(2);
   const [intPart, decPart] = fixed.split(".");
@@ -73,16 +102,7 @@ export function buildContratoDeterminadoTemplate(contrato: ContratoData): Contra
     { text: "DECLARACIONES", bold: true, align: "center" },
     { text: `I) "EL PATRON" ${patronEntidad} declara a través de su representante:` },
     {
-      text:
-        "1.- Ser una persona moral legalmente constituida bajo la Ley General de Sociedades Mercantiles con el " +
-        "Instrumento Público número nueve mil cuatrocientos veintidós, Volumen doscientos cuarenta, de fecha " +
-        "veintitrés de julio de mil novecientos noventa y nueve, ante la fe del LIC. FRANCISCO HACES " +
-        "ARGUELLES, titular de la Notaría Pública Número 38, con ejercicio en el Segundo Distrito Judicial del " +
-        "Estado, que comprende los municipios de Tampico, Ciudad Madero y Altamira, e inscrita debidamente en " +
-        `el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en ${direccionCentro} y legalmente representada por la C. Ing. ` +
-        "Ana Matilde Ávila Azuara, que cuenta con facultades suficientes para celebrar el presente convenio, " +
-        "acreditando su personalidad en términos del documento ya mencionado, facultades que a la fecha no le han " +
-        "sido revocadas o modificadas en forma alguna.",
+      text: getDeclaracionPatronUno(contrato.instituto, direccionCentro),
     },
     {
       text:
@@ -420,16 +440,7 @@ export function buildContratoIndeterminadoTemplate(contrato: ContratoData): Cont
     { text: "DECLARACIONES", bold: true, align: "center" },
     { text: `"EL PATRON" ${patronEntidad} declara a través de su representante:` },
     {
-      text:
-        "1.- Ser una persona moral legalmente constituida bajo la Ley General de Sociedades Mercantiles con el " +
-        "Instrumento Público número nueve mil cuatrocientos veintidós, Volumen doscientos cuarenta, de fecha " +
-        "veintitrés de julio de mil novecientos noventa y nueve, ante la fe del LIC. FRANCISCO HACES " +
-        "ARGUELLES, titular de la Notaría Pública Número 38, con ejercicio en el Segundo Distrito Judicial del " +
-        "Estado, que comprende los municipios de Tampico, Ciudad Madero y Altamira, e inscrita debidamente en " +
-        `el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en ${direccionCentro} y legalmente representada por la C. Ing. ` +
-        "Ana Matilde Ávila Azuara, que cuenta con facultades suficientes para celebrar el presente convenio, " +
-        "acreditando su personalidad en términos del documento ya mencionado, facultades que a la fecha no le han " +
-        "sido revocadas o modificadas en forma alguna.",
+      text: getDeclaracionPatronUno(contrato.instituto, direccionCentro),
     },
     {
       text:
@@ -700,16 +711,7 @@ export function buildContratoHoraTemplate(contrato: ContratoData): ContractTempl
     { text: "DECLARACIONES", bold: true, align: "center" },
     { text: `I) "EL PATRON" ${patronEntidad} declara a través de su representante:` },
     {
-      text:
-        "1.- Ser una persona moral legalmente constituida bajo la Ley General de Sociedades Mercantiles con el " +
-        "Instrumento Público número nueve mil cuatrocientos veintidós, Volumen doscientos cuarenta, de fecha " +
-        "veintitrés de julio de mil novecientos noventa y nueve, ante la fe del LIC. FRANCISCO HACES " +
-        "ARGUELLES, titular de la Notaría Pública Número 38, con ejercicio en el Segundo Distrito Judicial del " +
-        "Estado, que comprende los municipios de Tampico, Ciudad Madero y Altamira, e inscrita debidamente en " +
-        `el Registro Público del Comercio en Tampico, Tamaulipas con domicilio fiscal en ${direccionCentro} y legalmente representada por la C. Ing. ` +
-        "Ana Matilde Ávila Azuara, que cuenta con facultades suficientes para celebrar el presente convenio, " +
-        "acreditando su personalidad en términos del documento ya mencionado, facultades que a la fecha no le han " +
-        "sido revocadas o modificadas en forma alguna.",
+      text: getDeclaracionPatronUno(contrato.instituto, direccionCentro),
     },
     {
       text:
