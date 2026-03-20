@@ -106,6 +106,18 @@ const renderTemplateToPdf = (template: ContractTemplate, filename: string) => {
   const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 20;
   let y = 20;
+  const lineHeight = 5;
+  const paragraphSpacing = 2;
+
+  // 2026-03-17: Evitar recortes cuando el contenido queda al final de la hoja.
+  // Reserva espacio mínimo antes de pintar nuevas líneas/bloques y fuerza salto de página si no alcanza.
+  const ensureSpace = (requiredHeight: number) => {
+    const bottomLimit = pageHeight - margin;
+    if (y + requiredHeight > bottomLimit) {
+      doc.addPage();
+      y = 20;
+    }
+  };
 
   // 2025-03-17: Fuente y tamaño unificados: equivalente Arial (helvetica en PDF estándar), tamaño 8
   doc.setFont("helvetica");
@@ -129,10 +141,7 @@ const renderTemplateToPdf = (template: ContractTemplate, filename: string) => {
     const lines = doc.splitTextToSize(paragraph.text, width);
     
     lines.forEach((line: string, index: number) => {
-      if (y > pageHeight - 40) {
-        doc.addPage();
-        y = 20;
-      }
+      ensureSpace(lineHeight);
       const isLastLine = index === lines.length - 1;
       // No justificar si es elemento de lista, está centrado, o es la última línea
       const shouldJustify = align !== "center" && !isListItem && !isLastLine && lines.length > 1;
@@ -146,18 +155,15 @@ const renderTemplateToPdf = (template: ContractTemplate, filename: string) => {
         // Última línea, elementos de lista o alineación izquierda: dibujar normalmente
         doc.text(line.trim(), margin, y, { align: "left" });
       }
-      y += 5;
+      y += lineHeight;
     });
-    y += 2;
+    y += paragraphSpacing;
   });
 
-  if (y > pageHeight - 80) {
-    doc.addPage();
-    y = 20;
-  }
-
-  // Más espacio antes del bloque de firmas para que quepa la firma manuscrita
-  y += 22;
+  const preSignaturesGap = 22;
+  const signaturesBlockHeight = 66;
+  ensureSpace(preSignaturesGap + signaturesBlockHeight);
+  y += preSignaturesGap;
 
   const lineStr = "_______________________________________";
   const lineWidth = doc.getTextWidth(lineStr);
