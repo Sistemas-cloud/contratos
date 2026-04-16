@@ -178,7 +178,7 @@ export function buildContratoDeterminadoTemplate(contrato: ContratoData): Contra
         `servicios, el ubicado en ${direccionCentro};\n` +
         '"LAS PARTES" acuerdan que dicho domicilio podrá ser modificado de acuerdo a las necesidades de "EL PATRON", ' +
         'previo aviso por escrito a "EL TRABAJADOR". Para el caso que en el nuevo lugar de prestación de servicios ' +
-        'que le fuera lasignado variara el horario de labores, "EL TRABAJADOR" acepta allanarse a dicha modalidad.',
+        'que le fuera asignado variara el horario de labores, "EL TRABAJADOR" acepta allanarse a dicha modalidad.',
     },
     {
       text:
